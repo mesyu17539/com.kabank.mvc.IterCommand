@@ -4,7 +4,7 @@ public enum MemberEnum {
 	ID, PASS,NAME,SSN,PHONE,EMAIL,PROFILE,ADDR,
 	PROPERTIES{
 		public String toString() {
-			return ID+","+PASS+","+NAME+","+SSN+","+PHONE+","+EMAIL+","+ADDR+","+PROFILE;
+			return ID+","+PASS+","+NAME+","+SSN+","+PHONE+","+EMAIL+","+PROFILE+","+ADDR;
 		}
 	},
 	LOGIN{
@@ -20,6 +20,20 @@ public enum MemberEnum {
 		public String toString() {
 			// TODO Auto-generated method stub
 			return "UPDATE MEMBER SET pass='@' where id LIKE '$' AND pass LIKE '&'";
+		}
+	},
+	MEMBERDELETE{
+		@Override
+		public String toString() {
+			// TODO Auto-generated method stub
+			return "DELETE FROM Member where id='@'";
+		}
+	},
+	MEMJOIN{
+		@Override
+		public String toString() {
+			// TODO Auto-generated method stub
+			return "INSERT INTO %s(%s) VALUES(%s)";
 		}
 	}
 }

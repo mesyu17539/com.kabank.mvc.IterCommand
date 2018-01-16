@@ -254,6 +254,7 @@ public class MemberDAOImpl implements MemberDAO{
 				member.setSsn(rs.getString(MemberEnum.SSN.toString()));
 				member.setProfile(rs.getString(MemberEnum.PROFILE.toString()));
 			}
+			System.out.println("담긴 맴버 "+member);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -290,4 +291,58 @@ public class MemberDAOImpl implements MemberDAO{
 			e.printStackTrace();
 		}
 	}
+	@Override
+	public void deleteMember() {
+		// TODO Auto-generated method stub
+		StringBuffer sql=new StringBuffer(MemberEnum.MEMBERDELETE.toString());
+		sql.replace(sql.indexOf("@"), sql.indexOf("@")+1,InitCommand.cmd.getData().split("/")[0]);
+		System.out.println("dele sql"+sql.toString());
+		try {
+			DatabaseFactory.create(Vendor.ORACLE)
+					.getConnection()
+					.createStatement()
+					.executeUpdate(sql.toString());
+					/*(String.format(DMLENUM.UPDATE.toString()
+						+Enums.TABLE.MEMBER.toString()
+						+DMLENUM.SET.toString()
+						,bean.getPass(),bean.getId()));*/
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	@Override
+	public void memJoin() {
+		// TODO Auto-generated method stub
+		try {
+			DatabaseFactory.create(Vendor.ORACLE)
+			.getConnection()
+			.createStatement()
+			.executeUpdate(
+			String.format(
+				MemberEnum.MEMJOIN.toString()
+						,Enums.TABLE.MEMBER
+						,InitCommand.cmd.getColum()
+						,InitCommand.cmd.getData()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+/*		String[] arr=InitCommand.cmd.getData().split("/");
+		try {
+			DatabaseFactory.create(Vendor.ORACLE)
+			.getConnection()
+			.createStatement()
+			.executeUpdate(
+					String.format(
+							String.format(MemberEnum.MEMJOIN.toString()
+									,Enums.TABLE.MEMBER
+									,Enums.getEnu()
+									,Enums.getBlanks(Enums.MemberCalum.values().length))
+							,arr[0],arr[1],arr[2],arr[3]
+									,arr[4],arr[5],arr[6],arr[7]));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+*/	}
 }

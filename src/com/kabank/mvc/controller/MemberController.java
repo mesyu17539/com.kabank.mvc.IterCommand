@@ -13,6 +13,8 @@ import org.apache.catalina.tribes.membership.MemberImpl;
 
 import com.kabank.mvc.command.Command;
 import com.kabank.mvc.command.InitCommand;
+import com.kabank.mvc.command.JoinCommand;
+import com.kabank.mvc.command.LeaveCommand;
 import com.kabank.mvc.command.MoveCommand;
 import com.kabank.mvc.command.SearchCommand;
 import com.kabank.mvc.command.SearchSessionCommand;
@@ -48,10 +50,29 @@ public class MemberController extends HttpServlet {
 		/*Command cmd=CommandFactory.create(dir, page, action);*/
 		System.out.println("switch문 Action : "+InitCommand.cmd.getAction());
 		switch(InitCommand.cmd.getAction()) {
+		case MEMJOIN:
+			System.out.println("==========Member: MEMJOIN============");
+			new JoinCommand(request).execute();
+			MemberServiceImpl.getInstance().memjoin();
+			new MoveCommand(request).execute();
+			System.out.println("==========Member: MEMJOIN OUT============");
+			DispatcherServlet.send(request, response);
+			break;
+		case LEAVE:
+			System.out.println("==========Member: LEAVE============");
+			System.out.println("세션"+session.getAttribute("user"));
+			new LeaveCommand(request).execute();;
+			MemberServiceImpl.getInstance().leave();
+			/*MemberServiceImpl.getInstance().leave((MemberBean)session.getAttribute("user"));*/
+			session.invalidate();//세션 삭제
+			move(request, response);
+			System.out.println("==========Member: LEAVE OUT===========");
+			break;
 		case MOVE:
 			System.out.println("=========Member: Move=============");
 			System.out.println("=========Member: Move OUT=============");
-			move(request, response);break;
+			move(request, response);
+			break;
 			/*case MOVE:DispatcherServlet.send(request, response, cmd);*/			
 			/*path=request.getParameter("page");
 			System.out.printf("경로 %s page %s\n",dir,path);*/
@@ -64,9 +85,9 @@ public class MemberController extends HttpServlet {
 			bean.setId(((MemberBean) session.getAttribute("user")).getId());
 			new SearchSessionCommand(request).execute();
 			MemberServiceImpl.getInstance().chage(bean);
-			new MoveCommand(request).execute();
 			bean.setPass(InitCommand.cmd.getData().split("/")[2]);
 			session.setAttribute("user", bean);
+			new MoveCommand(request).execute();
 			System.out.println(InitCommand.cmd.getView());
 			System.out.println("=========CANGE: Login OUT=============");
 /*			System.out.println("=========CANGE: Login IN=============");
@@ -99,6 +120,7 @@ public class MemberController extends HttpServlet {
 			}else {
 				path="login";
 			}
+			System.out.println("=========Member: JOIN=============");
 			break;
 		case ADD:
 			System.out.println("=========Member: ADD=============");
@@ -120,7 +142,25 @@ public class MemberController extends HttpServlet {
 			System.out.println("ADD OUT");
 			break;
 		case LOGIN:
-			login(request, response,session);
+			System.out.println("=========Member: Login IN=============");
+			new SearchCommand(request).execute();
+			MemberBean memr=MemberServiceImpl.getInstance().login();
+			System.out.println(memr+"\n===============맴버==================");
+			if(memr==null) {
+				System.out.println("login 널로 왔다");
+				session.invalidate();//세션 삭제
+				InitCommand.cmd.setDir("user");
+				InitCommand.cmd.setPage("login");
+			}else {
+				System.out.println("login 세션 셋");
+				session.setAttribute("user", memr);
+				InitCommand.cmd.setDir("bitcamp");
+				InitCommand.cmd.setPage("main");
+			}
+			new MoveCommand(request).execute();
+			System.out.println(InitCommand.cmd.getView());
+			System.out.println("=========Member: Login OUT=============");
+			DispatcherServlet.send(request, response);
 			
 			/*String id=request.getParameter("id");
 			String pass=request.getParameter("pass");
@@ -153,28 +193,13 @@ public class MemberController extends HttpServlet {
 		
 	}
 
+
 	private void move(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		new MoveCommand(request).execute();
+		
 		DispatcherServlet.send(request, response);
 	}
 
-	private void login(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
-		System.out.println("=========Member: Login IN=============");
-		new SearchCommand(request).execute();
-		MemberBean memr=MemberServiceImpl.getInstance().login();
-		if(memr==null) {
-			InitCommand.cmd.setDir("user");
-			InitCommand.cmd.setPage("login");
-		}else {
-			session.setAttribute("user", memr);
-			InitCommand.cmd.setDir("bitcamp");
-			InitCommand.cmd.setPage("main");
-		}
-		new MoveCommand(request).execute();
-		System.out.println(InitCommand.cmd.getView());
-		System.out.println("=========Member: Login OUT=============");
-		DispatcherServlet.send(request, response);
-	}
 }
 /* Command pattern 쓰기 전 상태.
  * @WebServlet({"/user/login.do","/user/join_form.do","/user/auth.do","/user/memberjoin.do"})
@@ -199,8 +224,8 @@ public class MemberController extends HttpServlet {
 			bean.setId(request.getParameter("id"));
 			bean.setPass(request.getParameter("pass"));
 			MemberBean member=service.findById(bean);
-						MemberBean member=new MemberServiceImpl().findById(bean);
-			 			if(member!=null) {
+			MemberBean member=new MemberServiceImpl().findById(bean);
+ 			if(member!=null) {
 				 dir="bitcamp";
 				 path="main";
 				 request.setAttribute("user", member);//일회용

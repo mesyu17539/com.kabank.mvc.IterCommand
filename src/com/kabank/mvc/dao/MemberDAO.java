@@ -10,4 +10,6 @@ public interface MemberDAO {
 	public MemberBean selectMemberById(MemberBean bean);
 	public MemberBean login();
 	public void chagePass(MemberBean bean);
+	public void deleteMember();
+	public void memJoin();
 }

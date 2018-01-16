@@ -51,5 +51,15 @@ public class MemberServiceImpl implements MemberService{
 		// TODO Auto-generated method stub
 		MemberDAOImpl.getInstance().chagePass(m);
 	}
+	@Override
+	public void leave() {
+		// TODO Auto-generated method stub
+		MemberDAOImpl.getInstance().deleteMember();
+	}
+	@Override
+	public void memjoin() {
+		// TODO Auto-generated method stub
+		MemberDAOImpl.getInstance().memJoin();
+	}
 
 }

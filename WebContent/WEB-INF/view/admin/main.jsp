@@ -30,6 +30,7 @@
 								<select name="admin_tname">
 									<option value="MEMBER">회원</option>
 									<option value="ATTEND">출석</option>
+									<option value="bank">통장 개설</option>
 								</select>
 								<button id="admin_button">테이블 생성</button>
 							</form>

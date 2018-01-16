@@ -12,6 +12,7 @@ public class MoveCommand implements IOrder{
 	String servletPath;
 	public MoveCommand(HttpServletRequest request) {
 		map=ParamIterator.execute(request);
+		System.out.println("=====이동할때 맵=====\n"+map);
 		servletPath=request.getServletPath();
 	}
 	

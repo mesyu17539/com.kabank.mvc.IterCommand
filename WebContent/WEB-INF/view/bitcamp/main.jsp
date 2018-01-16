@@ -90,6 +90,7 @@
 </table>
 </form>
 <button id="bitcam_passbtn">비밀번호 변경</button>
+<button id="bitcam_leavebtn">회원 탈퇴</button>
 </div>
 </section>
 </body>
@@ -101,6 +102,10 @@ document.querySelector('#bitcam_passbtn').addEventListener("click",function () {
 document.querySelector('#bitcam_btn').addEventListener("click",function(){
 	alert("추울력");
 	document.querySelector('#bit_form').submit();
+},false)
+document.querySelector('#bitcam_leavebtn').addEventListener("click",function(){
+	alert("탈퇴버튼 클릭")
+	location.href="${pageContext.request.contextPath}/user.do?cmd=leave&dir=user&page=login"
 },false)
 </script>
 </html>

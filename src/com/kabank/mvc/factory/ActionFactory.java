@@ -12,12 +12,14 @@ public class ActionFactory {
 			action=Action.MOVE;break;
 		case "login":
 			action=Action.LOGIN;break;
+		case "memberjoin":
+			action=Action.MEMJOIN;break;
 		case "change":
-			action=Action.CHANGE;
-			break;
+			action=Action.CHANGE;break;
+		case "leave":
+			action=Action.LEAVE;break;
 		default:
-			action=Action.MOVE;
-			break;
+			action=Action.MOVE;break;
 		}
 		System.out.println("Action 값 입력 : "+action.toString());
 		return action;

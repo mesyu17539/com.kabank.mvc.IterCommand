@@ -7,4 +7,6 @@ public interface MemberService {
 	public void join(MemberBean bean);
 	public MemberBean login();
 	public void chage(MemberBean m);
+	public void leave();
+	public void memjoin();
 }

@@ -12,7 +12,7 @@
 </article>
 <article>
 	<div id="wrapper">
-		<form id="join_form" action="${pageContext.request.contextPath}/user.do?cmd=memberjoin">
+		<form id="join_form" action="${pageContext.request.contextPath}/user.do?">
 		<table id="join_table">	
 			<tr>
 				<td>ID : </td>
@@ -64,6 +64,9 @@
 			</tr>
 		</table>
 			<!-- 프로필사진 : <input type="image" name="profile"/><br /> -->
+			<input type="hidden" name="cmd" value="memberjoin"/>
+			<input type="hidden" name="dir" value="user"/>
+			<input type="hidden" name="page" value="login"/>
 		</form>
 	</div>
 </article>
